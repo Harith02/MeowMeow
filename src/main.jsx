@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import TinderCard from "react-tinder-card";
-import "../public/style.css";
+import "../public/app.css";
 
 const App = () => {
   const [cats, setCats] = useState([]);
