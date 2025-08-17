@@ -61,7 +61,7 @@ function addSwipeListeners(card) {
     if (offsetX > 100) swipe("right");
     else if (offsetX < -100) swipe("left");
     else card.style.transform = "translateX(0px) rotate(0deg)";
-https://cataas.com/cat?1755439944266&rand=0.6312493900986532
+    https://cataas.com/cat?1755439944266&rand=0.6312493900986532
     currentCard = null;
     offsetX = 0;
   });
