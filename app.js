@@ -3,43 +3,25 @@ const likeBtn = document.getElementById("like-btn");
 const dislikeBtn = document.getElementById("dislike-btn");
 const summaryDiv = document.getElementById("summary");
 
-let cats = [];
-let currentIndex = 0;
-let likedCats = [];
+let cats = [];         // stores URLs of cats shown
+let currentIndex = 0;  // index of current cat
+let likedCats = [];    // stores URLs of liked cats
+const totalCats = 10;  // total cats to show
 
-// possible types and filters
-const types = ["xsmall", "small", "medium", "square"];
-const filters = ["mono", "blur", "negate", ""];
+// Function to get a random cat URL (prevents caching)
+function getRandomCatUrl() {
+  return `https://cataas.com/cat?${new Date().getTime()}&rand=${Math.random()}`;
+}
 
-// Fetch 10 random cat images with random type and filter
-async function fetchCats() {
-  for (let i = 0; i < 10; i++) {
-    const res = await fetch("https://cataas.com/cat?json=true");
-    const data = await res.json();
-
-    // Random type
-    const types = ["xsmall", "small", "medium", "square"];
-    const type = types[Math.floor(Math.random() * types.length)];
-
-    // Random filter
-    const filters = ["mono", "blur", "negate", ""];
-    const filter = filters[Math.floor(Math.random() * filters.length)];
-
-    // Base URL from API
-    let url = `https://cataas.com${data.url}?type=${type}`;
-    if (filter) url += `&filter=${filter}`;
-    else if (Math.random() < 0.3) { // optional custom color tint
-      const r = Math.floor(Math.random() * 256);
-      const g = Math.floor(Math.random() * 256);
-      const b = Math.floor(Math.random() * 256);
-      url += `&filter=custom&r=${r}&g=${g}&b=${b}`;
-    }
-
-    cats.push(url);
+// Preload all cats URLs first
+function preloadCats() {
+  for (let i = 0; i < totalCats; i++) {
+    cats.push(getRandomCatUrl());
   }
   showCard();
 }
 
+// Show current cat
 function showCard() {
   cardContainer.innerHTML = "";
   if (currentIndex >= cats.length) {
@@ -54,11 +36,12 @@ function showCard() {
   cardContainer.appendChild(card);
 }
 
+// Handle swipe
 function swipe(direction) {
   const card = cardContainer.querySelector(".card");
   if (!card) return;
 
-  // animate card
+  // Animate card
   const moveX = direction === "right" ? 400 : -400;
   card.style.transform = `translateX(${moveX}px) rotate(${direction === "right" ? 15 : -15}deg)`;
   card.style.opacity = "0";
@@ -69,6 +52,7 @@ function swipe(direction) {
   setTimeout(showCard, 300); // show next card
 }
 
+// Show liked cats summary
 function showSummary() {
   cardContainer.innerHTML = "";
   summaryDiv.innerHTML = `<h2>You liked ${likedCats.length} cats 🐾</h2>`;
@@ -79,7 +63,9 @@ function showSummary() {
   });
 }
 
+// Button events
 likeBtn.addEventListener("click", () => swipe("right"));
 dislikeBtn.addEventListener("click", () => swipe("left"));
 
-fetchCats();
+// Start the app
+preloadCats();
