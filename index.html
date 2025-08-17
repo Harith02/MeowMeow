@@ -7,20 +7,26 @@
   <link rel="stylesheet" href="app.css">
 </head>
 <header>
-    <h1>Ca(T)inder</h1>
+    <img src="images/logo.png" alt="Cat Icon" id="logo" class="cat-icon">
 </header>
 <body>
-    <div id="progress">Cat 1 of 10</div>
+   <div id="settings">
+    <label for="total-cats">Number of Cats:</label>
+    <input type="number" id="total-cats" min="1" max="50" value="10">
+    <button id="start-btn">Start Swiping!</button>
+  </div>
 
-    <div id="card-container"></div>
+  <div id="progress">Cat 1 of 10</div>
+  <div id="card-container"></div>
 
-    <div class="button-row">
-        <button id="dislike-btn">Dislike</button>
-        <button id="like-btn">Like</button>
-    </div>
+  <div class="button-row">
+    <button id="dislike-btn">Dislike</button>
+    <button id="like-btn">Like</button>
+  </div>
 
-    <div id="summary" class="summary"></div>
+  <div id="summary" class="summary"></div>
+  <button id="play-again" style="display:none;">Play Again</button>
 
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

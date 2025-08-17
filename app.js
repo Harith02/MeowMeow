@@ -2,19 +2,30 @@ const cardContainer = document.getElementById("card-container");
 const likeBtn = document.getElementById("like-btn");
 const dislikeBtn = document.getElementById("dislike-btn");
 const summaryDiv = document.getElementById("summary");
+const progressDiv = document.getElementById("progress");
+const playAgainBtn = document.getElementById("play-again");
+const totalCatsInput = document.getElementById("total-cats");
+const startBtn = document.getElementById("start-btn");
 
-let cats = [];         // stores URLs of cats shown
-let currentIndex = 0;  // index of current cat
-let likedCats = [];    // stores URLs of liked cats
-const totalCats = 10;  // total cats to show
+let cats = [];
+let currentIndex = 0;
+let likedCats = [];
+let totalCats = parseInt(totalCatsInput.value) || 10;
 
-// Function to get a random cat URL (prevents caching)
+// Random cat URL
 function getRandomCatUrl() {
   return `https://cataas.com/cat?${new Date().getTime()}&rand=${Math.random()}`;
 }
 
-// Preload all cats URLs first
-function preloadCats() {
+// Preload cats
+function preloadCats(totalCats) {
+  cats = [];
+  currentIndex = 0;
+  likedCats = [];
+  summaryDiv.innerHTML = "";
+  progressDiv.textContent = "";
+  playAgainBtn.style.display = "none";
+
   for (let i = 0; i < totalCats; i++) {
     cats.push(getRandomCatUrl());
   }
@@ -28,13 +39,9 @@ function showCard() {
     showSummary();
     return;
   }
-  document.getElementById("progress").textContent = `Cat ${currentIndex + 1} of ${totalCats}`;
-  cardContainer.innerHTML = "";
-  
-  if (currentIndex >= cats.length) {
-    showSummary();
-    return;
-  }
+
+  progressDiv.textContent = `Cat ${currentIndex + 1} of ${cats.length}`;
+
   const card = document.createElement("div");
   card.className = "card";
   const img = document.createElement("img");
@@ -43,12 +50,11 @@ function showCard() {
   cardContainer.appendChild(card);
 }
 
-// Handle swipe
+// Swipe animation
 function swipe(direction) {
   const card = cardContainer.querySelector(".card");
   if (!card) return;
 
-  // Animate card
   const moveX = direction === "right" ? 400 : -400;
   card.style.transform = `translateX(${moveX}px) rotate(${direction === "right" ? 15 : -15}deg)`;
   card.style.opacity = "0";
@@ -56,23 +62,30 @@ function swipe(direction) {
   if (direction === "right") likedCats.push(cats[currentIndex]);
   currentIndex++;
 
-  setTimeout(showCard, 300); // show next card
+  setTimeout(showCard, 300);
 }
 
-// Show liked cats summary
+// Show summary with Play Again
 function showSummary() {
   cardContainer.innerHTML = "";
+  progressDiv.textContent = "";
   summaryDiv.innerHTML = `<h2>You liked ${likedCats.length} cats 🐾</h2>`;
   likedCats.forEach(url => {
     const img = document.createElement("img");
     img.src = url;
     summaryDiv.appendChild(img);
   });
+  playAgainBtn.style.display = "inline-block";
 }
 
 // Button events
 likeBtn.addEventListener("click", () => swipe("right"));
 dislikeBtn.addEventListener("click", () => swipe("left"));
+playAgainBtn.addEventListener("click", () => preloadCats(totalCats));
+startBtn.addEventListener("click", () => {
+  totalCats = parseInt(totalCatsInput.value) || 10;
+  preloadCats(totalCats);
+});
 
-// Start the app
-preloadCats();
+// Start the app with default
+preloadCats(totalCats);
