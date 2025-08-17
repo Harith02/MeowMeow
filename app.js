@@ -133,7 +133,6 @@ function showSummary() {
   summaryDiv.style.flexDirection = "column";
   summaryDiv.style.justifyContent = "center";
   summaryDiv.style.alignItems = "center";
-  summaryDiv.style.minHeight = "100vh"; // use full screen instead of reserving space
 
   // Show button
   playAgainBtn.style.display = "inline-block";
