@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TinderCard from "react-tinder-card";
-import "./App.css";
+import "./app.css";
 
 export default function App() {
   const [cats, setCats] = useState([]);
