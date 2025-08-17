@@ -2,7 +2,7 @@ const cardContainer = document.getElementById("card-container");
 const likeBtn = document.getElementById("like-btn");
 const dislikeBtn = document.getElementById("dislike-btn");
 const summaryDiv = document.getElementById("summary");
-const progressDiv = document.getElementById("progress");
+const progressFill = document.getElementById("progress-fill");
 const playAgainBtn = document.getElementById("play-again");
 const totalCatsInput = document.getElementById("total-cats");
 const startBtn = document.getElementById("start-btn");
@@ -14,7 +14,7 @@ let totalCats = parseInt(totalCatsInput.value) || 10;
 
 // Random cat URL
 function getRandomCatUrl() {
-  return `https://cataas.com/cat?${new Date().getTime()}&rand=${Math.random()}`;
+  return `https://cataas.com/cat?${Date.now()}&rand=${Math.random()}`;
 }
 
 // Preload cats
@@ -23,7 +23,6 @@ function preloadCats(totalCats) {
   currentIndex = 0;
   likedCats = [];
   summaryDiv.innerHTML = "";
-  progressDiv.textContent = "";
   playAgainBtn.style.display = "none";
   cardContainer.style.display = "block";
 
@@ -41,7 +40,8 @@ function showCard() {
     return;
   }
 
-  progressDiv.textContent = `Cat ${currentIndex + 1} of ${cats.length}`;
+  // Update progress bar
+  progressFill.style.width = `${((currentIndex) / cats.length) * 100}%`;
 
   const card = document.createElement("div");
   card.className = "card";
@@ -114,7 +114,6 @@ function swipe(direction) {
 // Show summary
 function showSummary() {
   cardContainer.style.display = "none";
-  progressDiv.textContent = "";
 
   summaryDiv.innerHTML = `<h2>You liked ${likedCats.length} cats 🐾</h2>`;
   const imagesContainer = document.createElement("div");
@@ -126,6 +125,13 @@ function showSummary() {
     img.src = url;
     imagesContainer.appendChild(img);
   });
+
+  // Center the summary section
+  summaryDiv.style.display = "flex";
+  summaryDiv.style.flexDirection = "column";
+  summaryDiv.style.justifyContent = "center";
+  summaryDiv.style.alignItems = "center";
+  summaryDiv.style.minHeight = "60vh";
 
   playAgainBtn.style.display = "inline-block";
 }
