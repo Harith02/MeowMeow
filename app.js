@@ -25,57 +25,13 @@ function preloadCats(totalCats) {
   summaryDiv.innerHTML = "";
   progressDiv.textContent = "";
   playAgainBtn.style.display = "none";
+  cardContainer.style.display = "block";
 
   for (let i = 0; i < totalCats; i++) {
     cats.push(getRandomCatUrl());
   }
   showCard();
 }
-
-// Add swipe gestures
-let startX = 0;
-let currentCard = null;
-
-function addSwipeListeners(card) {
-  let offsetX = 0;
-  card.style.transition = "none"; // disable smooth for drag
-
-  card.addEventListener("pointerdown", e => {
-    startX = e.clientX || e.touches?.[0]?.clientX;
-    currentCard = card;
-    card.setPointerCapture(e.pointerId);
-  });
-
-  card.addEventListener("pointermove", e => {
-    if (!currentCard) return;
-    const currentX = e.clientX || e.touches?.[0]?.clientX;
-    offsetX = currentX - startX;
-    card.style.transform = `translateX(${offsetX}px) rotate(${offsetX / 15}deg)`;
-  });
-
-  card.addEventListener("pointerup", e => {
-    if (!currentCard) return;
-
-    card.style.transition = "transform 0.3s ease, opacity 0.3s ease"; // enable smooth
-
-    if (offsetX > 100) swipe("right");
-    else if (offsetX < -100) swipe("left");
-    else card.style.transform = "translateX(0px) rotate(0deg)";
-    https://cataas.com/cat?1755439944266&rand=0.6312493900986532
-    currentCard = null;
-    offsetX = 0;
-  });
-
-  card.addEventListener("pointercancel", () => {
-    if (currentCard) {
-      card.style.transition = "transform 0.3s ease, opacity 0.3s ease";
-      currentCard.style.transform = "translateX(0px) rotate(0deg)";
-      currentCard = null;
-      offsetX = 0;
-    }
-  });
-}
-
 
 // Show current cat
 function showCard() {
@@ -94,8 +50,50 @@ function showCard() {
   card.appendChild(img);
   cardContainer.appendChild(card);
 
-  // Attach swipe listeners
   addSwipeListeners(card);
+}
+
+// Swipe gestures
+let startX = 0;
+let currentCard = null;
+
+function addSwipeListeners(card) {
+  let offsetX = 0;
+  card.style.transition = "none";
+
+  card.addEventListener("pointerdown", e => {
+    startX = e.clientX || e.touches?.[0]?.clientX;
+    currentCard = card;
+    card.setPointerCapture(e.pointerId);
+  });
+
+  card.addEventListener("pointermove", e => {
+    if (!currentCard) return;
+    const currentX = e.clientX || e.touches?.[0]?.clientX;
+    offsetX = currentX - startX;
+    card.style.transform = `translateX(${offsetX}px) rotate(${offsetX / 15}deg)`;
+  });
+
+  card.addEventListener("pointerup", () => {
+    if (!currentCard) return;
+    card.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+
+    if (offsetX > 100) swipe("right");
+    else if (offsetX < -100) swipe("left");
+    else card.style.transform = "translateX(0px) rotate(0deg)";
+
+    currentCard = null;
+    offsetX = 0;
+  });
+
+  card.addEventListener("pointercancel", () => {
+    if (currentCard) {
+      card.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+      currentCard.style.transform = "translateX(0px) rotate(0deg)";
+      currentCard = null;
+      offsetX = 0;
+    }
+  });
 }
 
 // Swipe animation
@@ -113,16 +111,22 @@ function swipe(direction) {
   setTimeout(showCard, 300);
 }
 
-// Show summary with Play Again
+// Show summary
 function showSummary() {
-  cardContainer.innerHTML = "";
+  cardContainer.style.display = "none";
   progressDiv.textContent = "";
+
   summaryDiv.innerHTML = `<h2>You liked ${likedCats.length} cats 🐾</h2>`;
+  const imagesContainer = document.createElement("div");
+  imagesContainer.id = "summary-images";
+  summaryDiv.appendChild(imagesContainer);
+
   likedCats.forEach(url => {
     const img = document.createElement("img");
     img.src = url;
-    summaryDiv.appendChild(img);
+    imagesContainer.appendChild(img);
   });
+
   playAgainBtn.style.display = "inline-block";
 }
 
