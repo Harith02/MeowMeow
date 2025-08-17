@@ -7,12 +7,35 @@ let cats = [];
 let currentIndex = 0;
 let likedCats = [];
 
-// Fetch 10 cat images from Cataas
+// possible types and filters
+const types = ["xsmall", "small", "medium", "square"];
+const filters = ["mono", "blur", "negate", ""];
+
+// Fetch 10 random cat images with random type and filter
 async function fetchCats() {
   for (let i = 0; i < 10; i++) {
     const res = await fetch("https://cataas.com/cat?json=true");
     const data = await res.json();
-    cats.push(`https://cataas.com/cat/${data._id}`);
+
+    // Random type
+    const types = ["xsmall", "small", "medium", "square"];
+    const type = types[Math.floor(Math.random() * types.length)];
+
+    // Random filter
+    const filters = ["mono", "blur", "negate", ""];
+    const filter = filters[Math.floor(Math.random() * filters.length)];
+
+    // Base URL from API
+    let url = `https://cataas.com${data.url}?type=${type}`;
+    if (filter) url += `&filter=${filter}`;
+    else if (Math.random() < 0.3) { // optional custom color tint
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      url += `&filter=custom&r=${r}&g=${g}&b=${b}`;
+    }
+
+    cats.push(url);
   }
   showCard();
 }
