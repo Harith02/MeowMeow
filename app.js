@@ -28,6 +28,13 @@ function showCard() {
     showSummary();
     return;
   }
+  document.getElementById("progress").textContent = `Cat ${currentIndex + 1} of ${totalCats}`;
+  cardContainer.innerHTML = "";
+  
+  if (currentIndex >= cats.length) {
+    showSummary();
+    return;
+  }
   const card = document.createElement("div");
   card.className = "card";
   const img = document.createElement("img");
