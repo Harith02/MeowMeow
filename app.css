@@ -1,3 +1,9 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 *img {
   max-width: 100%;
   height: auto;
@@ -197,10 +203,15 @@ h1 {
 #summary {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  min-height: 60vh;
-  gap: 10px;
+  display: none; 
+  margin: 0px;
+  padding: 0px;
+}
+
+#summary.active {
+  display: block;
 }
 
 #summary img {

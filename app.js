@@ -113,8 +113,10 @@ function swipe(direction) {
 
 // Show summary
 function showSummary() {
+  // Hide the cards
   cardContainer.style.display = "none";
 
+  // Reset and build summary content
   summaryDiv.innerHTML = `<h2>You liked ${likedCats.length} cats 🐾</h2>`;
   const imagesContainer = document.createElement("div");
   imagesContainer.id = "summary-images";
@@ -126,15 +128,17 @@ function showSummary() {
     imagesContainer.appendChild(img);
   });
 
-  // Center the summary section
-  summaryDiv.style.display = "flex";
+  // Show and style summary
+  summaryDiv.style.display = "flex"; // make it appear
   summaryDiv.style.flexDirection = "column";
   summaryDiv.style.justifyContent = "center";
   summaryDiv.style.alignItems = "center";
-  summaryDiv.style.minHeight = "60vh";
+  summaryDiv.style.minHeight = "100vh"; // use full screen instead of reserving space
 
+  // Show button
   playAgainBtn.style.display = "inline-block";
 }
+
 
 // Button events
 likeBtn.addEventListener("click", () => swipe("right"));
