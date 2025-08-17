@@ -32,6 +32,46 @@ function preloadCats(totalCats) {
   showCard();
 }
 
+// Add swipe gestures
+let startX = 0;
+let currentCard = null;
+
+function addSwipeListeners(card) {
+  let offsetX = 0;
+
+  card.addEventListener("pointerdown", e => {
+    startX = e.clientX || e.touches?.[0]?.clientX;
+    currentCard = card;
+    card.setPointerCapture(e.pointerId);
+  });
+
+  card.addEventListener("pointermove", e => {
+    if (!currentCard) return;
+    const currentX = e.clientX || e.touches?.[0]?.clientX;
+    offsetX = currentX - startX;
+    card.style.transform = `translateX(${offsetX}px) rotate(${offsetX / 15}deg)`;
+  });
+
+  card.addEventListener("pointerup", e => {
+    if (!currentCard) return;
+
+    if (offsetX > 100) swipe("right");
+    else if (offsetX < -100) swipe("left");
+    else card.style.transform = "translateX(0px) rotate(0deg)";
+
+    currentCard = null;
+    offsetX = 0;
+  });
+
+  card.addEventListener("pointercancel", () => {
+    if (currentCard) {
+      currentCard.style.transform = "translateX(0px) rotate(0deg)";
+      currentCard = null;
+      offsetX = 0;
+    }
+  });
+}
+
 // Show current cat
 function showCard() {
   cardContainer.innerHTML = "";
@@ -48,6 +88,9 @@ function showCard() {
   img.src = cats[currentIndex];
   card.appendChild(img);
   cardContainer.appendChild(card);
+
+  // Attach swipe listeners
+  addSwipeListeners(card);
 }
 
 // Swipe animation
