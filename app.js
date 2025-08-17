@@ -38,6 +38,7 @@ let currentCard = null;
 
 function addSwipeListeners(card) {
   let offsetX = 0;
+  card.style.transition = "none"; // disable smooth for drag
 
   card.addEventListener("pointerdown", e => {
     startX = e.clientX || e.touches?.[0]?.clientX;
@@ -55,22 +56,26 @@ function addSwipeListeners(card) {
   card.addEventListener("pointerup", e => {
     if (!currentCard) return;
 
+    card.style.transition = "transform 0.3s ease, opacity 0.3s ease"; // enable smooth
+
     if (offsetX > 100) swipe("right");
     else if (offsetX < -100) swipe("left");
     else card.style.transform = "translateX(0px) rotate(0deg)";
-
+https://cataas.com/cat?1755439944266&rand=0.6312493900986532
     currentCard = null;
     offsetX = 0;
   });
 
   card.addEventListener("pointercancel", () => {
     if (currentCard) {
+      card.style.transition = "transform 0.3s ease, opacity 0.3s ease";
       currentCard.style.transform = "translateX(0px) rotate(0deg)";
       currentCard = null;
       offsetX = 0;
     }
   });
 }
+
 
 // Show current cat
 function showCard() {
